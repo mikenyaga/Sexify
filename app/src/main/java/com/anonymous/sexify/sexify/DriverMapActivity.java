@@ -52,12 +52,11 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     Location myLocation;
     LocationRequest locationRequest;
 
-    private Button logOut;
+    private Button logOut,settings;
 
     private String customerId = "";
 
     private Boolean isLoggingOut = false;
-
     private SupportMapFragment mapFragment;
 
     private LinearLayout customerInfo;
@@ -93,8 +92,21 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                 return;
             }
         });
-        getAssignedCustomer();
 
+        settings = findViewById(R.id.settings);
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(DriverMapActivity.this,DriverSettingsActivity.class);
+                startActivity(intent);
+                finish();
+                return;
+            }
+        });
+
+
+
+        getAssignedCustomer();
 
         customerInfo = findViewById(R.id.customerInfo);
         customerProfileImage = findViewById(R.id.customerProfileImage);
@@ -252,7 +264,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             myLocation = location;
             LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
             String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
             DatabaseReference refAvailable = FirebaseDatabase.getInstance().getReference("driversAvailable");

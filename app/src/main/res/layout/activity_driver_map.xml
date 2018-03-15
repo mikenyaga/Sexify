@@ -7,10 +7,19 @@
     tools:context="com.anonymous.sexify.sexify.DriverMapActivity">
 
     <Button
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Log Out"
         android:id="@+id/logOut"
+        android:background="#000"
+        android:textColor="#fff"
+        android:layout_margin="5dp"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Settings"
+        android:layout_gravity="right"
+        android:id="@+id/settings"
         android:background="#000"
         android:textColor="#fff"
         android:layout_margin="5dp"/>
@@ -27,13 +36,13 @@
         android:orientation="horizontal"
         android:layout_gravity="bottom"
         android:background="@android:color/white"
-        android:visibility="gone">
+        android:visibility="visible">
         <ImageView
             android:id="@+id/customerProfileImage"
             android:layout_width="100sp"
             android:layout_height="100sp"
             android:src="@drawable/profile_img"
-            android:padding="20sp"/>
+            android:padding="1sp"/>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -43,21 +52,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/customerDestination"
-                android:paddingBottom="10sp"
+                android:paddingBottom="1sp"
                 />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/customerName"
                 android:paddingBottom="10sp"
-                android:paddingTop="20sp"
+                android:paddingTop="2sp"
                 />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/customerPhone"
                 android:paddingBottom="10sp"
-                android:paddingTop="20sp"/>
+                android:paddingTop="2sp"/>
 
         </LinearLayout>
 
