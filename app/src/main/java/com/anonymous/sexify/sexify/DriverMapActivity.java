@@ -119,6 +119,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     customerName.setText("");
                     customerPhone.setText("");
                     customerProfileImage.setImageResource(R.mipmap.ic_launcher);
+                    customerDestination.setText("Dest: ");
 
                 }
             }
@@ -133,27 +134,15 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     private void getAssignedCustomerDestination(){
         String driverId = FirebaseAuth.getInstance().getUid();
-        DatabaseReference assignedCustomerRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverId).child("customerRequest").child("customerRideId");
-        assignedCustomerRef.addValueEventListener(new ValueEventListener() {
+        DatabaseReference assignedCustomerRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverId).child("customerRequest").child("destination");
+        assignedCustomerRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()){
-                    customerId = dataSnapshot.getValue().toString();
-
+                    String destination= dataSnapshot.getValue().toString();
+                    customerDestination.setText("Dest: "+destination);
                 }else{
-                    customerId = "";
-
-                    if (pickupMarker!=null){
-                        pickupMarker.remove();
-                    }
-                    if (assignedCustomerPickupLocationRefListener != null) {
-                        assignedCustomerPickupLocationRef.removeEventListener(assignedCustomerPickupLocationRefListener);
-                    }
-                    customerInfo.setVisibility(View.GONE);
-                    customerName.setText("");
-                    customerPhone.setText("");
-                    customerProfileImage.setImageResource(R.mipmap.ic_launcher);
-
+                    customerDestination.setText("Dest: ");
                 }
             }
 
