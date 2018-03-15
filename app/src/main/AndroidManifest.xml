@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -42,7 +43,8 @@
         <activity
             android:name=".DriverMapActivity"
             android:label="@string/title_activity_driver_map" />
-        <activity android:name=".CustomerMapActivity"></activity>
+        <activity android:name=".CustomerMapActivity" />
+        <activity android:name=".CustomerSettingsActivity"></activity>
     </application>
 
 </manifest>
