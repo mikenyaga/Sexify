@@ -39,6 +39,34 @@
         android:background="@null"
         android:layout_marginBottom="20sp"
         android:inputType="number"/>
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/radioGroup"
+        android:orientation="horizontal">
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text = "UberX"
+            android:id="@+id/UberX">
+
+        </RadioButton>
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text = "UberX"
+            android:id="@+id/UberSelect">
+
+        </RadioButton>
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text = "UberX"
+            android:id="@+id/UberChap">
+
+        </RadioButton>
+    </RadioGroup>
+
 
     <Button
         android:id="@+id/confirm"
