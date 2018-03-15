@@ -252,7 +252,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             myLocation = location;
             LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(-4));
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
             String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
             DatabaseReference refAvailable = FirebaseDatabase.getInstance().getReference("driversAvailable");
