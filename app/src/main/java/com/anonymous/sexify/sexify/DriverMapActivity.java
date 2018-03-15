@@ -59,7 +59,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     private LinearLayout customerInfo;
     private ImageView customerProfileImage;
-    private TextView customerName,customerPhone;
+    private TextView customerName,customerPhone,customerDestination;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,11 +92,12 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         customerProfileImage = findViewById(R.id.customerProfileImage);
         customerName = findViewById(R.id.customerName);
         customerPhone = findViewById(R.id.customerPhone);
+        customerDestination = findViewById(R.id.customerDestination);
     }
 
     private void getAssignedCustomer(){
         String driverId = FirebaseAuth.getInstance().getUid();
-        DatabaseReference assignedCustomerRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverId).child("customerRideId");
+        DatabaseReference assignedCustomerRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverId).child("customerRequest").child("customerRideId");
         assignedCustomerRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -104,6 +105,41 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     customerId = dataSnapshot.getValue().toString();
                     getAssignedCustomerPickupLocation();
                     getAssignedCustomerInfo();
+                    getAssignedCustomerDestination();
+                }else{
+                    customerId = "";
+
+                    if (pickupMarker!=null){
+                        pickupMarker.remove();
+                    }
+                    if (assignedCustomerPickupLocationRefListener != null) {
+                        assignedCustomerPickupLocationRef.removeEventListener(assignedCustomerPickupLocationRefListener);
+                    }
+                    customerInfo.setVisibility(View.GONE);
+                    customerName.setText("");
+                    customerPhone.setText("");
+                    customerProfileImage.setImageResource(R.mipmap.ic_launcher);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void getAssignedCustomerDestination(){
+        String driverId = FirebaseAuth.getInstance().getUid();
+        DatabaseReference assignedCustomerRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverId).child("customerRequest").child("customerRideId");
+        assignedCustomerRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    customerId = dataSnapshot.getValue().toString();
+
                 }else{
                     customerId = "";
 
