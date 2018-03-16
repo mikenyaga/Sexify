@@ -60,7 +60,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     Location myLocation;
     LocationRequest locationRequest;
 
-    private Button logOut,settings;
+    private Button logOut,settings,rideStatus;
 
     private String customerId = "";
 
@@ -70,6 +70,12 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private LinearLayout customerInfo;
     private ImageView customerProfileImage;
     private TextView customerName,customerPhone,customerDestination;
+
+
+    //pick customer
+    private int rStatus = 0;
+    private String destination;
+    private LatLng destinationLatLng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +128,24 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         customerName = findViewById(R.id.customerName);
         customerPhone = findViewById(R.id.customerPhone);
         customerDestination = findViewById(R.id.customerDestination);
+
+        //pick customer
+
+        rideStatus = findViewById(R.id.rideStatus);
+        rideStatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switch (rStatus){
+                    case 1:
+                        //driver on the way to pick customer
+                        break;
+                    case  2:
+                        endRide();
+                        //driver is on the way to the destination with the customer
+                        break;
+                }
+            }
+        });
     }
 
     private void getAssignedCustomer(){
@@ -131,6 +155,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()){
+                    //change status to 1
+                    rStatus =1;
                     customerId = dataSnapshot.getValue().toString();
                     getAssignedCustomerPickupLocation();
                     getAssignedCustomerInfo();
@@ -446,5 +472,31 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             line.remove();
         }
         polylines.clear();
+    }
+
+
+    private void endRide(){
+        rideStatus.setText("Picked Customer");
+
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(userId).child("customerRequest");
+        driverRef.removeValue();
+
+        DatabaseReference  ref = FirebaseDatabase.getInstance().getReference("customerRequest");
+        GeoFire geoFire = new GeoFire(ref);
+
+        geoFire.removeLocation(customerId, new GeoFire.CompletionListener() {
+            @Override
+            public void onComplete(String key, DatabaseError error) {
+
+            }
+        });
+        customerId = "";
+
+        if (pickupMarker != null){
+            pickupMarker.remove();
+
+        }
+
     }
 }
