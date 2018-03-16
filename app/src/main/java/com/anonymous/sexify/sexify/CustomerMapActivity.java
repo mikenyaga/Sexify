@@ -55,7 +55,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     Location mylastLocation;
     LocationRequest locationRequest;
 
-    private Button logOut,request,settings;
+    private Button logOut,request,settings,history;
 
     private LatLng pickupLocation;
 
@@ -85,6 +85,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     //destination variables
     private LatLng destinationLatLng;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,6 +163,16 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 startActivity(intent);
                 return;
                 //we wont finish coz we want customerMapActivity to go on top of settings Activity
+            }
+        });
+
+        history = findViewById(R.id.history);
+        history.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CustomerMapActivity.this,HistoryActivity.class);
+                startActivity(intent);
+                return;
             }
         });
 
