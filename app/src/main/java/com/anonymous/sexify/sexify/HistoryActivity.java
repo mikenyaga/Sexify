@@ -7,6 +7,8 @@ import android.support.v7.widget.RecyclerView;
 public class HistoryActivity extends AppCompatActivity {
 
     private RecyclerView historyRecyclerView;
+    private RecyclerView.Adapter historyAdapter;
+    private RecyclerView.LayoutManager historyLayoutManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
