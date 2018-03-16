@@ -98,15 +98,49 @@
             </LinearLayout>
 
         </LinearLayout>
-        <Button
+        <LinearLayout
+            android:background="@android:color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Request"
-            android:id="@+id/request"
-            android:layout_gravity="bottom"
-            android:background="#000"
-            android:textColor="#fff"
-            android:layout_margin="5dp"/>
+            android:orientation="vertical">
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/radioGroup"
+                android:orientation="horizontal">
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text = "UberX"
+                    android:id="@+id/UberX">
+
+                </RadioButton>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text = "UberSelect"
+                    android:id="@+id/UberSelect">
+
+                </RadioButton>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text = "UberChap"
+                    android:id="@+id/UberChap">
+
+                </RadioButton>
+            </RadioGroup>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Request"
+                android:id="@+id/request"
+                android:layout_gravity="bottom"
+                android:background="#000"
+                android:textColor="#fff"
+                android:layout_margin="5dp"/>
+        </LinearLayout>
+
     </LinearLayout>
 
 </FrameLayout>

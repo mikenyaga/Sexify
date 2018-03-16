@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -44,6 +46,7 @@ public class DriverSettingsActivity extends AppCompatActivity {
     private String name;
     private String phone;
     private String car;
+    private String driverService;
     private String profileImageUrl;
 
     private ImageView profileImage;
@@ -51,6 +54,9 @@ public class DriverSettingsActivity extends AppCompatActivity {
     private Uri resultUri;
 
     private final int RESULT_CODE = 1;
+
+    //driver services
+    private RadioGroup radioGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +101,7 @@ public class DriverSettingsActivity extends AppCompatActivity {
                 startActivityForResult(intent,RESULT_CODE);
             }
         });
+        radioGroup = findViewById(R.id.radioGroup);
 
     }
 
@@ -103,10 +110,21 @@ public class DriverSettingsActivity extends AppCompatActivity {
         phone = phoneField.getText().toString();
         car = carField.getText().toString();
 
+        //driver service
+        int selectedId = radioGroup.getCheckedRadioButtonId();
+
+        final RadioButton radioButton = findViewById(selectedId);
+        if (radioButton.getText() == null){
+            return;
+        }
+
+        driverService = radioButton.getText().toString();
+
         Map userInfo = new HashMap();
         userInfo.put("name",name);
         userInfo.put("phone",phone);
         userInfo.put("car",car);
+        userInfo.put("service",driverService);
         driverDatabase.updateChildren(userInfo);
 
         if (resultUri!=null){
@@ -165,6 +183,20 @@ public class DriverSettingsActivity extends AppCompatActivity {
                     if (map.get("car")!=null){
                         car = map.get("car").toString();
                         carField.setText(car);
+                    }
+                    if (map.get("service")!=null){
+                        driverService = map.get("service").toString();
+                        switch (driverService){
+                            case "UberX":
+                                radioGroup.check(R.id.UberX);
+                                break;
+                            case "UberSelect":
+                                radioGroup.check(R.id.UberSelect);
+                                break;
+                            case "UberChap":
+                                radioGroup.check(R.id.UberChap);
+                                break;
+                        }
                     }
                     if (map.get("profileImageUrl")!=null){
                         profileImageUrl = map.get("profileImageUrl").toString();
