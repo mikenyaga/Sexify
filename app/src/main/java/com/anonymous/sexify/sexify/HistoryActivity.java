@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.Toast;
+import android.text.format.DateFormat;
 
 import com.anonymous.sexify.sexify.historyRecylerVIew.HistoryAdapter;
 import com.anonymous.sexify.sexify.historyRecylerVIew.HistoryObject;
@@ -14,7 +14,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class HistoryActivity extends AppCompatActivity {
 
@@ -79,7 +82,13 @@ public class HistoryActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()){
                     String rideId = dataSnapshot.getKey();
-                    dataHistory.add(new HistoryObject(rideId));
+                    Long timestamp = 0L;
+                    for (DataSnapshot child:dataSnapshot.getChildren()){
+                        if (child.getKey().equals("timestamp")){
+                            timestamp = Long.valueOf(child.getValue().toString());
+                        }
+                    }
+                    dataHistory.add(new HistoryObject(rideId,getDate(timestamp)));
                     historyAdapter.notifyDataSetChanged();
                 }
             }
@@ -89,5 +98,12 @@ public class HistoryActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private String getDate(Long timestamp) {
+        Calendar cal = Calendar.getInstance(Locale.getDefault());
+        cal.setTimeInMillis(timestamp*1000);
+        String date = DateFormat.format("dd:MM:yyyy",cal).toString();
+        return date;
     }
 }

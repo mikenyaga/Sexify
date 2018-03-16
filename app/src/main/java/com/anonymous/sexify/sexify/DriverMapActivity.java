@@ -538,8 +538,14 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         HashMap map = new HashMap();
         map.put("driver",userId);
         map.put("customer",customerId);
+        map.put("timestamp",getCurrentTimestamp());
         map.put("rating",0);
 
         historyRef.child(requestId).updateChildren(map);
+    }
+
+    public Long getCurrentTimestamp() {
+        Long timestamp = System.currentTimeMillis()/1000;
+        return timestamp;
     }
 }
