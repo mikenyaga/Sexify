@@ -484,7 +484,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
 
     private void endRide(){
-        rideStatus.setText("Picked Customer > End Ride");
+        rideStatus.setText("Enroute,End Ride");
         erasePolylines();
         
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
