@@ -34,11 +34,10 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryViewHolder> {
     @Override
     public void onBindViewHolder(HistoryViewHolder holder, int position) {
         holder.rideId.setText(itemList.get(position).getRideId());
-
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return itemList.size();
     }
 }
