@@ -162,21 +162,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     getAssignedCustomerInfo();
                     getAssignedCustomerDestination();
                 }else{
-                    erasePloylines();
-
-                    customerId = "";
-
-                    if (pickupMarker!=null){
-                        pickupMarker.remove();
-                    }
-                    if (assignedCustomerPickupLocationRefListener != null) {
-                        assignedCustomerPickupLocationRef.removeEventListener(assignedCustomerPickupLocationRefListener);
-                    }
-                    customerInfo.setVisibility(View.GONE);
-                    customerName.setText("");
-                    customerPhone.setText("");
-                    customerProfileImage.setImageResource(R.mipmap.ic_launcher);
-                    customerDestination.setText("Dest: ");
+                    endRide();
 
                 }
             }
@@ -467,7 +453,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     public void onRoutingCancelled() {
 
     }
-    private void erasePloylines(){
+    private void erasePolylines(){
         for(Polyline line:polylines){
             line.remove();
         }
@@ -477,11 +463,12 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     private void endRide(){
         rideStatus.setText("Picked Customer");
-
+        erasePolylines();
+        
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(userId).child("customerRequest");
         driverRef.removeValue();
-
+        
         DatabaseReference  ref = FirebaseDatabase.getInstance().getReference("customerRequest");
         GeoFire geoFire = new GeoFire(ref);
 
@@ -497,6 +484,20 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             pickupMarker.remove();
 
         }
+
+        customerId = "";
+
+        if (pickupMarker!=null){
+            pickupMarker.remove();
+        }
+        if (assignedCustomerPickupLocationRefListener != null) {
+            assignedCustomerPickupLocationRef.removeEventListener(assignedCustomerPickupLocationRefListener);
+        }
+        customerInfo.setVisibility(View.GONE);
+        customerName.setText("");
+        customerPhone.setText("");
+        customerProfileImage.setImageResource(R.mipmap.ic_launcher);
+        customerDestination.setText("Dest: ");
 
     }
 }
