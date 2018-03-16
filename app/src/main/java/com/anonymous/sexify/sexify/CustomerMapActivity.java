@@ -119,43 +119,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         request.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //called when customer cancels the ride
                if (requestBool){
-                   requestBool= false;
-                   geoQuery.removeAllListeners();
-                   driverLocationRef.removeEventListener(driverLocationRefListener);
-
-                   if (driverFoundId != null){
-                       DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundId).child("customerRequest");
-                       driverRef.removeValue();
-                       driverFoundId = null;
-                   }
-                   driverFound = false;
-                   radius = 1;
-
-                   String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                   DatabaseReference  ref = FirebaseDatabase.getInstance().getReference("customerRequest");
-                   GeoFire geoFire = new GeoFire(ref);
-
-                   geoFire.removeLocation(userId, new GeoFire.CompletionListener() {
-                       @Override
-                       public void onComplete(String key, DatabaseError error) {
-
-                       }
-                   });
-
-                   if (pickupMarker != null){
-                       pickupMarker.remove();
-                       if (driverMarker != null){
-                           driverMarker.remove();
-                       }
-                   }
-                   request.setText("Request");
-
-                   driverInfo.setVisibility(View.GONE);
-                   driverName.setText("");
-                   driverPhone.setText("");
-                   driverProfileImage.setImageResource(R.mipmap.ic_launcher);
-                   driverCar.setText("");
+                   endRide();
                }else {
                    //driver service
                    int selectedId = radioGroup.getCheckedRadioButtonId();
@@ -328,6 +294,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                     request.setText("Getting Driver Location");
                                     getDriverLocation();
                                     getDriverInfo();
+                                    getHasRideEnded();
                                 }
                             }
                         }
@@ -367,17 +334,21 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         });
     }
 
+
+    private DatabaseReference driveEndedRef;
+    private ValueEventListener driveEndedRefListener;
+
     private void getHasRideEnded(){
-        String driverId = FirebaseAuth.getInstance().getUid();
-        DatabaseReference assignedCustomerRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverId).child("customerRequest").child("customerRideId");
-        assignedCustomerRef.addValueEventListener(new ValueEventListener() {
+
+        driveEndedRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundId).child("customerRequest").child("customerRideId");
+        driveEndedRefListener = driveEndedRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()){
 
                 }else{
-
-
+                    //we only care about if ride has been canclled by driver
+                    endRide();
                 }
             }
 
@@ -387,6 +358,46 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             }
         });
 
+    }
+
+    private void endRide(){
+        requestBool= false;
+        geoQuery.removeAllListeners();
+        driverLocationRef.removeEventListener(driverLocationRefListener);
+        driveEndedRef.removeEventListener(driveEndedRefListener);
+
+        if (driverFoundId != null){
+            DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundId).child("customerRequest");
+            driverRef.removeValue();
+            driverFoundId = null;
+        }
+        driverFound = false;
+        radius = 1;
+
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference  ref = FirebaseDatabase.getInstance().getReference("customerRequest");
+        GeoFire geoFire = new GeoFire(ref);
+
+        geoFire.removeLocation(userId, new GeoFire.CompletionListener() {
+            @Override
+            public void onComplete(String key, DatabaseError error) {
+
+            }
+        });
+
+        if (pickupMarker != null){
+            pickupMarker.remove();
+            if (driverMarker != null){
+                driverMarker.remove();
+            }
+        }
+        request.setText("Request");
+
+        driverInfo.setVisibility(View.GONE);
+        driverName.setText("");
+        driverPhone.setText("");
+        driverProfileImage.setImageResource(R.mipmap.ic_launcher);
+        driverCar.setText("");
     }
 
     private void getDriverInfo(){
