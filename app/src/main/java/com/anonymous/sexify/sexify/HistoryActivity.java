@@ -87,9 +87,10 @@ public class HistoryActivity extends AppCompatActivity {
                         if (child.getKey().equals("timestamp")){
                             timestamp = Long.valueOf(child.getValue().toString());
                         }
+                        dataHistory.add(new HistoryObject(rideId,getDate(timestamp)));
+                        historyAdapter.notifyDataSetChanged();
                     }
-                    dataHistory.add(new HistoryObject(rideId,getDate(timestamp)));
-                    historyAdapter.notifyDataSetChanged();
+
                 }
             }
 
@@ -103,7 +104,7 @@ public class HistoryActivity extends AppCompatActivity {
     private String getDate(Long timestamp) {
         Calendar cal = Calendar.getInstance(Locale.getDefault());
         cal.setTimeInMillis(timestamp*1000);
-        String date = DateFormat.format("dd:MM:yyyy",cal).toString();
+        String date = DateFormat.format("MM-dd-yyyy hh:mm",cal).toString();
         return date;
     }
 }

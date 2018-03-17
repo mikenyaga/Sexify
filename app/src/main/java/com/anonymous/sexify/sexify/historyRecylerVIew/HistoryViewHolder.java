@@ -1,9 +1,12 @@
 package com.anonymous.sexify.sexify.historyRecylerVIew;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.anonymous.sexify.sexify.HistorySingleActivity;
 import com.anonymous.sexify.sexify.R;
 
 /**
@@ -23,6 +26,11 @@ public class HistoryViewHolder extends RecyclerView.ViewHolder implements View.O
 
     @Override
     public void onClick(View view) {
+        Intent intent = new Intent(view.getContext(),HistorySingleActivity.class);
+        Bundle b = new Bundle();
+        b.putString("rideId",rideId.getText().toString());
+        intent.putExtras(b);
+        view.getContext().startActivity(intent);
 
     }
 }

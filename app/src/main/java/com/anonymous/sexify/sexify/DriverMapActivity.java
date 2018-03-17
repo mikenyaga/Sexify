@@ -77,6 +77,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private int rStatus = 0;
     private String destination;
     private LatLng destinationLatLng;
+    LatLng pickupLatLng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -269,7 +270,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     if (map.get(1) !=null){
                         locationlng = Double.parseDouble(map.get(1).toString());
                     }
-                    LatLng pickupLatLng = new LatLng(locationlat,locationlng);
+                     pickupLatLng = new LatLng(locationlat,locationlng);
 
                     pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLatLng).title("Pick Up Location"));
                     
@@ -539,6 +540,11 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         map.put("driver",userId);
         map.put("customer",customerId);
         map.put("timestamp",getCurrentTimestamp());
+        map.put("destination",destination);
+        map.put("location/from/lat",pickupLatLng.latitude);
+        map.put("location/from/lng",pickupLatLng.longitude);
+        map.put("location/to/lat",destinationLatLng.latitude);
+        map.put("location/to/lng",destinationLatLng.longitude);
         map.put("rating",0);
 
         historyRef.child(requestId).updateChildren(map);
