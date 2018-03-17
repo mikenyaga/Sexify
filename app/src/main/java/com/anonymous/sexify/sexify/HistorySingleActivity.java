@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +49,7 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
     private TextView userName;
     private TextView userPhone;
     private TextView rideDate;
+    private RatingBar ratingBar;
 
     private LatLng destinationLatLng,pickupLatLng;
 
@@ -70,6 +72,7 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
         userName = findViewById(R.id.userName);
         userPhone = findViewById(R.id.userPhone);
         userImage = findViewById(R.id.userImage);
+        ratingBar = findViewById(R.id.ratingBar);
 
 
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -102,6 +105,7 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
                             if (!driverId.equals(userId)){
                                 userType = "Customers";
                                 getUserInformation("Drivers",driverId);
+                                //displayCustomerRelatedObject();
                             }
                         }
                         if (child.getKey().equals("timestamp")){
@@ -165,7 +169,7 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
     }
 
     private List<Polyline> polylines;
-    private static final int[] COLORS = new int[]{R.color.primary_dark_material_light};
+    private static final int[] COLORS = new int[]{R.color.colorBlack};
 
     @Override
     public void onRoutingFailure(RouteException e) {
