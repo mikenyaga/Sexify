@@ -6,6 +6,6 @@
     android:layout_height="match_parent"
     tools:context="com.anonymous.makanga.makanga.CustomerMapHolderActivity">
 
-    <include layout="@layout/content_customer_map_holder" />
+    <include layout="@layout/content_customer_map" />
 
 </android.support.design.widget.CoordinatorLayout>
