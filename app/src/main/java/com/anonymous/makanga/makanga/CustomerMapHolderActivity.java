@@ -7,8 +7,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -49,7 +54,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CustomerMapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
+public class CustomerMapHolderActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener ,OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
 
     private GoogleMap mMap;
     GoogleApiClient googleApiClient;
@@ -93,11 +99,22 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_map);
+
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, null, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(CustomerMapActivity.this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},LOCATION_REQUEST_CODE);
+            ActivityCompat.requestPermissions(CustomerMapHolderActivity.this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},LOCATION_REQUEST_CODE);
         }else {
             mapFragment.getMapAsync(this);
         }
@@ -106,78 +123,43 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         //force a ride option
         radioGroup.check(R.id.UberX);
 
-        logOut =findViewById(R.id.logOut);
-        logOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(CustomerMapActivity.this,MainActivity.class);
-                startActivity(intent);
-                finish();
-                return;
-            }
-        });
-
         request =findViewById(R.id.request);
         request.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //called when customer cancels the ride
-               if (requestBool){
-                   endRide();
-               }else {
-                   //driver service
-                   int selectedId = radioGroup.getCheckedRadioButtonId();
+                if (requestBool){
+                    endRide();
+                }else {
+                    //driver service
+                    int selectedId = radioGroup.getCheckedRadioButtonId();
 
-                   final RadioButton radioButton = findViewById(selectedId);
-                   if (radioButton.getText() == null){
-                       return;
-                   }
+                    final RadioButton radioButton = findViewById(selectedId);
+                    if (radioButton.getText() == null){
+                        return;
+                    }
 
-                   requestService = radioButton.getText().toString();
+                    requestService = radioButton.getText().toString();
 
-                   requestBool = true;
-                   String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                   DatabaseReference  ref = FirebaseDatabase.getInstance().getReference("customerRequest");
-                   GeoFire geoFire = new GeoFire(ref);
-                   geoFire.setLocation(userId, new GeoLocation(mylastLocation.getLatitude(), mylastLocation.getLongitude()), new GeoFire.CompletionListener() {
-                       @Override
-                       public void onComplete(String key, DatabaseError error) {
+                    requestBool = true;
+                    String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
+                    GeoFire geoFire = new GeoFire(ref);
+                    geoFire.setLocation(userId, new GeoLocation(mylastLocation.getLatitude(), mylastLocation.getLongitude()), new GeoFire.CompletionListener() {
+                        @Override
+                        public void onComplete(String key, DatabaseError error) {
 
-                       }
-                   });
-                   pickupLocation = new LatLng(mylastLocation.getLatitude(), mylastLocation.getLongitude());
-                   pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Pickup Here"));
-                   request.setText("Getting Driver");
+                        }
+                    });
+                    pickupLocation = new LatLng(mylastLocation.getLatitude(), mylastLocation.getLongitude());
+                    pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Pickup Here"));
+                    request.setText("Getting Driver");
 
-                   getClosestDriver();
-               }
+                    getClosestDriver();
+                }
 
             }
         });
-
-        settings =findViewById(R.id.settings);
-        settings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(CustomerMapActivity.this,CustomerSettingsActivity.class);
-                startActivity(intent);
-                return;
-                //we wont finish coz we want customerMapActivity to go on top of settings Activity
-            }
-        });
-
-        history = findViewById(R.id.history);
-        history.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(CustomerMapActivity.this,HistoryActivity.class);
-                intent.putExtra("userType","Customers");
-                startActivity(intent);
-                return;
-            }
-        });
-
         PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
 
@@ -210,13 +192,49 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     }
 
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.logOut) {
+            FirebaseAuth.getInstance().signOut();
+            Intent intent = new Intent(CustomerMapHolderActivity.this,HomeActivity.class);
+            startActivity(intent);
+            finish();
+        } else if (id == R.id.settings) {
+            Intent intent = new Intent(CustomerMapHolderActivity.this,CustomerSettingsActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.history) {
+            Intent intent = new Intent(CustomerMapHolderActivity.this,HistoryActivity.class);
+            intent.putExtra("userType","Customers");
+            startActivity(intent);
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(CustomerMapActivity.this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},LOCATION_REQUEST_CODE);
+            ActivityCompat.requestPermissions(CustomerMapHolderActivity.this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},LOCATION_REQUEST_CODE);
         }
         buildGoogleApiClient();
         mMap.setMyLocationEnabled(true);
@@ -249,7 +267,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(CustomerMapActivity.this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},LOCATION_REQUEST_CODE);
+            ActivityCompat.requestPermissions(CustomerMapHolderActivity.this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},LOCATION_REQUEST_CODE);
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
 

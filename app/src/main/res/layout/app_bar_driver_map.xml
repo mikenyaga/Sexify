@@ -4,8 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="com.anonymous.makanga.makanga.HomeActivity">
-    <include layout="@layout/content_home" />
-</android.support.design.widget.CoordinatorLayout>
+    tools:context="com.anonymous.makanga.makanga.DriverMapActivity">
 
+
+    <include layout="@layout/content_driver_map" />
+
+
+</android.support.design.widget.CoordinatorLayout>

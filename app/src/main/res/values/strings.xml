@@ -7,4 +7,6 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    <string name="title_activity_map_with">MapWithActivity</string>
+    <string name="title_activity_customer_map_holder">CustomerMapHolderActivity</string>
 </resources>
