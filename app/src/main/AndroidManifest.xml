@@ -58,7 +58,7 @@
             android:name=".DriverMapActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".CustomerMapHolderActivity"
+            android:name=".CustomerMapActivity"
             android:label="@string/title_activity_customer_map_holder"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>

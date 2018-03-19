@@ -54,7 +54,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CustomerMapHolderActivity extends AppCompatActivity
+public class CustomerMapActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener ,OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
 
     private GoogleMap mMap;
@@ -114,7 +114,7 @@ public class CustomerMapHolderActivity extends AppCompatActivity
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(CustomerMapHolderActivity.this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},LOCATION_REQUEST_CODE);
+            ActivityCompat.requestPermissions(CustomerMapActivity.this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},LOCATION_REQUEST_CODE);
         }else {
             mapFragment.getMapAsync(this);
         }
@@ -212,14 +212,14 @@ public class CustomerMapHolderActivity extends AppCompatActivity
 
         if (id == R.id.logOut) {
             FirebaseAuth.getInstance().signOut();
-            Intent intent = new Intent(CustomerMapHolderActivity.this,HomeActivity.class);
+            Intent intent = new Intent(CustomerMapActivity.this,HomeActivity.class);
             startActivity(intent);
             finish();
         } else if (id == R.id.settings) {
-            Intent intent = new Intent(CustomerMapHolderActivity.this,CustomerSettingsActivity.class);
+            Intent intent = new Intent(CustomerMapActivity.this,CustomerSettingsActivity.class);
             startActivity(intent);
         } else if (id == R.id.history) {
-            Intent intent = new Intent(CustomerMapHolderActivity.this,HistoryActivity.class);
+            Intent intent = new Intent(CustomerMapActivity.this,HistoryActivity.class);
             intent.putExtra("userType","Customers");
             startActivity(intent);
         }
@@ -234,7 +234,7 @@ public class CustomerMapHolderActivity extends AppCompatActivity
         mMap = googleMap;
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(CustomerMapHolderActivity.this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},LOCATION_REQUEST_CODE);
+            ActivityCompat.requestPermissions(CustomerMapActivity.this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},LOCATION_REQUEST_CODE);
         }
         buildGoogleApiClient();
         mMap.setMyLocationEnabled(true);
@@ -267,7 +267,7 @@ public class CustomerMapHolderActivity extends AppCompatActivity
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(CustomerMapHolderActivity.this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},LOCATION_REQUEST_CODE);
+            ActivityCompat.requestPermissions(CustomerMapActivity.this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},LOCATION_REQUEST_CODE);
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
 

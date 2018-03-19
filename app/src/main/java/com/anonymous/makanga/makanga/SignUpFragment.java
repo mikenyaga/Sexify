@@ -78,7 +78,7 @@ public class SignUpFragment extends Fragment {
                     if (userType.equals("Drivers")){
                         intent = new Intent(getActivity(),DriverMapActivity.class);
                     }else{
-                        intent = new Intent(getActivity(),CustomerMapHolderActivity.class);
+                        intent = new Intent(getActivity(),CustomerMapActivity.class);
                     }
                     startActivity(intent);
                     return;
