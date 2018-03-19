@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.anonymous.sexify.sexify.HistoryActivity"
+    tools:context="com.anonymous.makanga.makanga.HistoryActivity"
     android:fitsSystemWindows="true">
     <LinearLayout
         android:layout_width="match_parent"

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.anonymous.sexify.sexify.MainActivity">
+    tools:context="com.anonymous.makanga.makanga.MainActivity">
 
    <Button
        android:layout_width="match_parent"

@@ -4,31 +4,49 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.anonymous.sexify.sexify.DriverMapActivity">
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Log Out"
-        android:id="@+id/logOut"
-        android:background="#000"
-        android:textColor="#fff"
-        android:layout_margin="5dp"/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Settings"
-        android:layout_gravity="right"
-        android:id="@+id/settings"
-        android:background="#000"
-        android:textColor="#fff"
-        android:layout_margin="5dp"/>
+    tools:context="com.anonymous.makanga.makanga.DriverMapActivity">
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-         />
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Log Out"
+                android:id="@+id/logOut"
+                android:background="#000"
+                android:textColor="#fff"/>
+            <Button
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Settings"
+                android:layout_gravity="right"
+                android:id="@+id/settings"
+                android:background="#000"
+                android:textColor="#fff"/>
+        </LinearLayout>
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Working"
+            android:layout_margin="10dp"
+            android:id="@+id/workingSwitch"/>
+
+    </LinearLayout>
+
+
+
     <LinearLayout
         android:id="@+id/customerInfo"
         android:layout_width="match_parent"

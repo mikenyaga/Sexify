@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:418695382552:android:450b55d24f074d1e",
         "android_client_info": {
-          "package_name": "com.anonymous.sexify"
+          "package_name": "com.anonymous.makanga"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "418695382552-hsvr0oohftos5ijg5n4trv5q7n6mh08i.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.anonymous.sexify",
+            "package_name": "com.anonymous.makanga",
             "certificate_hash": "19635c16beb428e81e6554e8ba069971f085e62b"
           }
         },
@@ -54,7 +54,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:418695382552:android:707f95a679d92855",
         "android_client_info": {
-          "package_name": "com.anonymous.sexify"
+          "package_name": "com.anonymous.makanga"
         }
       },
       "oauth_client": [
@@ -62,7 +62,7 @@
           "client_id": "418695382552-ukvnahbu7n5f52lerbpo3snpfece25jt.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.anonymous.sexify",
+            "package_name": "com.anonymous.makanga",
             "certificate_hash": "19635c16beb428e81e6554e8ba069971f085e62b"
           }
         },
