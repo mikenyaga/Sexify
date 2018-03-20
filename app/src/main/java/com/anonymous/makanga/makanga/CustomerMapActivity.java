@@ -101,13 +101,13 @@ public class CustomerMapActivity extends AppCompatActivity
         setContentView(R.layout.activity_customer_map);
 
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, null, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -194,7 +194,7 @@ public class CustomerMapActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -224,7 +224,8 @@ public class CustomerMapActivity extends AppCompatActivity
             startActivity(intent);
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        item.setChecked(false);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -252,9 +253,9 @@ public class CustomerMapActivity extends AppCompatActivity
     public void onLocationChanged(Location location) {
         //called every second
         mylastLocation = location;
-        LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+        //LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
+       // mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+       // mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
 
     }
 
@@ -381,7 +382,7 @@ public class CustomerMapActivity extends AppCompatActivity
                 if (dataSnapshot.exists()){
 
                 }else{
-                    //we only care about if ride has been canclled by driver
+                    //we only care about if ride has been cancelled by driver
                     endRide();
                 }
             }
