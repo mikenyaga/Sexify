@@ -24,6 +24,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.directions.route.AbstractRouting;
+import com.directions.route.Route;
+import com.directions.route.RouteException;
+import com.directions.route.Routing;
+import com.directions.route.RoutingListener;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -43,6 +48,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -50,12 +57,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class CustomerMapActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener ,OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
+        implements NavigationView.OnNavigationItemSelectedListener ,OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener,RoutingListener {
 
     private GoogleMap mMap;
     GoogleApiClient googleApiClient;
@@ -82,7 +90,7 @@ public class CustomerMapActivity extends AppCompatActivity
 
     SupportMapFragment mapFragment;
 
-    private LinearLayout driverInfo;
+    private LinearLayout driverInfo,customerActions;
     private ImageView driverProfileImage;
     private TextView driverName,driverPhone,driverCar;
 
@@ -93,7 +101,7 @@ public class CustomerMapActivity extends AppCompatActivity
     //destination variables
     private LatLng destinationLatLng;
 
-    private RatingBar ratingBar;
+    private TextView ratingBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +118,7 @@ public class CustomerMapActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        polylines = new ArrayList<>();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -121,7 +130,17 @@ public class CustomerMapActivity extends AppCompatActivity
 
         radioGroup = findViewById(R.id.radioGroup);
         //force a ride option
-        radioGroup.check(R.id.UberX);
+        radioGroup.check(R.id.MakangaPlus);
+
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                int selectedId = radioGroup.getCheckedRadioButtonId();
+
+                final RadioButton radioButton = findViewById(selectedId);
+                request.setText("Confirm "+radioButton.getText());
+            }
+        });
 
         request =findViewById(R.id.request);
         request.setOnClickListener(new View.OnClickListener() {
@@ -167,9 +186,15 @@ public class CustomerMapActivity extends AppCompatActivity
             @Override
             public void onPlaceSelected(Place place) {
                 // TODO: Get info about the selected place.
+                erasePolylines();
                 destination = place.getName().toString();
                 //add destination
                 destinationLatLng = place.getLatLng();
+                getRouteToMarker(destinationLatLng);
+
+
+                customerActions.setVisibility(View.VISIBLE);
+                radioGroup.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -179,6 +204,7 @@ public class CustomerMapActivity extends AppCompatActivity
         });
 
         driverInfo = findViewById(R.id.driverInfo);
+        customerActions = findViewById(R.id.customerActions);
         driverProfileImage = findViewById(R.id.driverProfileImage);
         driverName = findViewById(R.id.driverName);
         driverPhone = findViewById(R.id.driverPhone);
@@ -239,6 +265,7 @@ public class CustomerMapActivity extends AppCompatActivity
         }
         buildGoogleApiClient();
         mMap.setMyLocationEnabled(true);
+
     }
     protected synchronized void buildGoogleApiClient(){
         googleApiClient = new GoogleApiClient.Builder(this)
@@ -253,9 +280,9 @@ public class CustomerMapActivity extends AppCompatActivity
     public void onLocationChanged(Location location) {
         //called every second
         mylastLocation = location;
-        //LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
-       // mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-       // mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+        LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
 
     }
 
@@ -263,8 +290,8 @@ public class CustomerMapActivity extends AppCompatActivity
     public void onConnected(@Nullable Bundle bundle) {
         //when map is called and everything is ready
         locationRequest = new LocationRequest();
-        locationRequest.setInterval(1000);
-        locationRequest.setFastestInterval(1000);
+        locationRequest.setInterval(5000);
+        locationRequest.setFastestInterval(5000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -397,6 +424,7 @@ public class CustomerMapActivity extends AppCompatActivity
 
     private void endRide(){
         requestBool= false;
+        erasePolylines();
         geoQuery.removeAllListeners();
         driverLocationRef.removeEventListener(driverLocationRefListener);
         driveEndedRef.removeEventListener(driveEndedRefListener);
@@ -429,6 +457,7 @@ public class CustomerMapActivity extends AppCompatActivity
         request.setText("Request");
 
         driverInfo.setVisibility(View.GONE);
+        customerActions.setVisibility(View.GONE);
         driverName.setText("");
         driverPhone.setText("");
         driverProfileImage.setImageResource(R.mipmap.ic_launcher);
@@ -462,7 +491,7 @@ public class CustomerMapActivity extends AppCompatActivity
                         ratingsCount++;
                     }
                     if (ratingsCount!=0){
-                        ratingBar.setRating((ratingSum/ratingsCount));
+                        ratingBar.setText(""+(ratingSum/ratingsCount));
                     }
 
                 }
@@ -506,11 +535,13 @@ public class CustomerMapActivity extends AppCompatActivity
                     loc2.setLatitude(driverLatLng.latitude);
                     loc2.setLongitude(driverLatLng.longitude);
 
-                    float distance = loc1.distanceTo(loc2);
+                    float distance = Math.round(loc1.distanceTo(loc2)/1000);
 
-                    request.setText("Driver Found: "+String.valueOf(distance));
+                    request.setText("Your Driver is "+String.valueOf(distance)+"km Away");
 
                     driverMarker = mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Your Driver"));
+
+                    radioGroup.setVisibility(View.GONE);
 
                 }
             }
@@ -539,4 +570,70 @@ public class CustomerMapActivity extends AppCompatActivity
                 break;
         }
     }
+
+    private void getRouteToMarker(LatLng pickupLatLng) {
+        Routing routing = new Routing.Builder()
+                .travelMode(AbstractRouting.TravelMode.DRIVING)
+                .withListener(this)
+                .alternativeRoutes(false)
+                .waypoints(new LatLng(mylastLocation.getLatitude(),mylastLocation.getLongitude()), pickupLatLng)
+                .build();
+        routing.execute();
+    }
+
+    private List<Polyline> polylines;
+    private static final int[] COLORS = new int[]{R.color.colorBlack};
+
+    @Override
+    public void onRoutingFailure(RouteException e) {
+        if(e != null) {
+            Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }else {
+            Toast.makeText(this, "Something went wrong, Try again", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onRoutingStart() {
+
+    }
+
+    @Override
+    public void onRoutingSuccess(ArrayList<Route> route, int shortestRouteIndex) {
+        if(polylines.size()>0) {
+            for (Polyline poly : polylines) {
+                poly.remove();
+            }
+        }
+
+        polylines = new ArrayList<>();
+        //add route(s) to the map.
+        for (int i = 0; i <route.size(); i++) {
+
+            //In case of more than 5 alternative routes
+            int colorIndex = i % COLORS.length;
+
+            PolylineOptions polyOptions = new PolylineOptions();
+            polyOptions.color(getResources().getColor(COLORS[colorIndex]));
+            polyOptions.width(10 + i * 3);
+            polyOptions.addAll(route.get(i).getPoints());
+            Polyline polyline = mMap.addPolyline(polyOptions);
+            polylines.add(polyline);
+
+            Toast.makeText(getApplicationContext(),"Route "+ (i+1) +": distance - "+ route.get(i).getDistanceValue()+": duration - "+ route.get(i).getDurationValue(),Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    @Override
+    public void onRoutingCancelled() {
+
+    }
+    private void erasePolylines(){
+        for(Polyline line:polylines){
+            line.remove();
+        }
+        polylines.clear();
+    }
+
 }

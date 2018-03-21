@@ -47,24 +47,18 @@
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text = "UberX"
-            android:id="@+id/UberX">
+            android:text = "MakangaLess"
+            android:id="@+id/MakangaLess">
 
         </RadioButton>
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text = "UberSelect"
-            android:id="@+id/UberSelect">
+            android:text = "MakangaPlus"
+            android:id="@+id/MakangaPlus">
 
         </RadioButton>
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text = "UberChap"
-            android:id="@+id/UberChap">
 
-        </RadioButton>
     </RadioGroup>
 
 

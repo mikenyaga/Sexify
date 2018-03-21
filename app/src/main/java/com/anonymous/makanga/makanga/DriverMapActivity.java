@@ -240,7 +240,7 @@ public class DriverMapActivity extends AppCompatActivity
                     Map<String,Object> map = (Map<String, Object>) dataSnapshot.getValue();
                     if (map.get("destination") !=null){
                         destination = map.get("destination").toString();
-                        customerDestination.setText("Dest: "+destination);
+                        customerDestination.setText(destination);
                     }else{
                         customerDestination.setText("Dest: ");
                     }
@@ -423,8 +423,8 @@ public class DriverMapActivity extends AppCompatActivity
     public void onConnected(@Nullable Bundle bundle) {
         //when map is called and everything is ready
         locationRequest = new LocationRequest();
-        locationRequest.setInterval(1000);
-        locationRequest.setFastestInterval(1000);
+        locationRequest.setInterval(5000);
+        locationRequest.setFastestInterval(5000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
     }
@@ -479,7 +479,7 @@ public class DriverMapActivity extends AppCompatActivity
     }
 
     private List<Polyline> polylines;
-    private static final int[] COLORS = new int[]{R.color.primary_dark_material_light};
+    private static final int[] COLORS = new int[]{R.color.colorBlack};
 
     @Override
     public void onRoutingFailure(RouteException e) {
