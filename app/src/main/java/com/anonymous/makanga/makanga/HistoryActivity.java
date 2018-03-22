@@ -83,11 +83,15 @@ public class HistoryActivity extends AppCompatActivity {
                 if (dataSnapshot.exists()){
                     String rideId = dataSnapshot.getKey();
                     Long timestamp = 0L;
+                    String destination = "";
                     for (DataSnapshot child:dataSnapshot.getChildren()){
                         if (child.getKey().equals("timestamp")){
                             timestamp = Long.valueOf(child.getValue().toString());
                         }
-                        dataHistory.add(new HistoryObject(rideId,getDate(timestamp)));
+                        if (child.getKey().equals("destination")){
+                            destination = child.getValue().toString();
+                        }
+                        dataHistory.add(new HistoryObject(destination,rideId,getDate(timestamp)));
                         historyAdapter.notifyDataSetChanged();
                     }
 

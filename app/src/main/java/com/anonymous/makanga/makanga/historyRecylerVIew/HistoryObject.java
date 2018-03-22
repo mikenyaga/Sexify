@@ -7,10 +7,12 @@ package com.anonymous.makanga.makanga.historyRecylerVIew;
 public class HistoryObject {
     private String rideId;
     private String time;
+    private String destination;
 
-    public HistoryObject(String rideId,String time){
+    public HistoryObject(String destination, String rideId, String time){
         this.rideId = rideId;
         this.time = time;
+        this.destination = destination;
     }
 
     public String getRideId(){
@@ -20,4 +22,6 @@ public class HistoryObject {
     public String getTime() {
         return time;
     }
+
+    public String getDestination(){return  destination;}
 }

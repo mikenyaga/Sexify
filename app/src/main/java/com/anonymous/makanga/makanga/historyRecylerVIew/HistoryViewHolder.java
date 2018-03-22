@@ -15,13 +15,14 @@ import com.anonymous.makanga.makanga.R;
 
 public class HistoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    public TextView rideId,time;
+    public TextView rideId,time,destination;
 
     public HistoryViewHolder(View itemView) {
         super(itemView);
         itemView.setOnClickListener(this);
         rideId = itemView.findViewById(R.id.rideId);
         time = itemView.findViewById(R.id.time);
+        destination = itemView.findViewById(R.id.destination);
     }
 
     @Override

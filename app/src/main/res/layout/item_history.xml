@@ -2,16 +2,25 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="20sp">
+    android:layout_height="50dp"
+    android:orientation="horizontal"
+    android:padding="2sp"
+    android:weightSum="2">
 
-    <TextView
+    <com.customfonts.CustomTextView_Open_Sans
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/time"/>
-    <TextView
+        android:id="@+id/destination"
+        android:layout_weight="1"/>
+    <com.customfonts.CustomTextView_Open_Sans
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/rideId"/>
+        android:id="@+id/rideId"
+        android:visibility="gone"
+        android:layout_weight="0"/>
+    <com.customfonts.CustomTextView_Open_Sans
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/time"
+        android:layout_weight="1"/>
 </LinearLayout>
